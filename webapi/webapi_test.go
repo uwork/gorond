@@ -28,7 +28,7 @@ func TestMain(t *testing.T) {
 }
 
 func TestNewWebApiServer(t *testing.T) {
-	addr := ":6666"
+	addr := ":16777"
 	grn := goron.Goron{}
 	grn.Config = &config.Config{}
 
@@ -50,7 +50,7 @@ func TestStart(t *testing.T) {
 	buffer := &bytes.Buffer{}
 	logger = logging.NewLoggerWithWriter(buffer, logging.DEBUG)
 
-	server, err := NewWebApiServer(":6789", nil)
+	server, err := NewWebApiServer(":16777", nil)
 	if err != nil {
 		t.Error(err)
 		return
@@ -68,7 +68,7 @@ func TestStart(t *testing.T) {
 	pid := os.Getpid()
 	syscall.Kill(pid, syscall.SIGTERM)
 	err = <-wsc
-	if err.Error() != "accept tcp [::]:6789: use of closed network connection" {
+	if err.Error() != "accept tcp [::]:16777: use of closed network connection" {
 		t.Error(err)
 	}
 
@@ -87,7 +87,7 @@ func TestResponse404(t *testing.T) {
 		t.Error(err)
 	}
 
-	resp, err := http.Get("http://localhost:6777/invalid_path")
+	resp, err := http.Get("http://localhost:16777/invalid_path")
 	if err != nil {
 		t.Error(err)
 	}
@@ -116,7 +116,7 @@ func TestResponseJobs(t *testing.T) {
 		t.Error(err)
 	}
 
-	resp, err := http.Get("http://localhost:6777/jobs")
+	resp, err := http.Get("http://localhost:16777/jobs")
 	if err != nil {
 		t.Error(err)
 	}
@@ -154,7 +154,7 @@ func TestResponseStatuses(t *testing.T) {
 		t.Error(err)
 	}
 
-	resp, err := http.Get("http://localhost:6777/statuses")
+	resp, err := http.Get("http://localhost:16777/statuses")
 	if err != nil {
 		t.Error(err)
 	}
@@ -177,7 +177,7 @@ func TestResponseStatuses(t *testing.T) {
 	time.Sleep(time.Second)
 
 	// 実行中の状態を取得
-	resp2, err := http.Get("http://localhost:6777/statuses")
+	resp2, err := http.Get("http://localhost:16777/statuses")
 	if err != nil {
 		t.Error(err)
 	}
