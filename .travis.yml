@@ -1,0 +1,13 @@
+langage: go
+sudo: false
+go:
+  - 1.5
+  - tip
+before_install:
+  - go get github.com/aws/aws-sdk-go/service/sns
+  - go get github.com/robfig/cron
+  - go get gopkg.in/gcfg.v1
+  - go get -d -t -v ./...
+  - go build -v ./...
+script:
+  - go test -v ./...
