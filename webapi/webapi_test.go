@@ -2,9 +2,9 @@ package webapi
 
 import (
 	"bytes"
-	"gorond/config"
-	"gorond/goron"
-	"gorond/logging"
+	"github.com/uwork/gorond/config"
+	"github.com/uwork/gorond/goron"
+	"github.com/uwork/gorond/logging"
 	"io/ioutil"
 	"net/http"
 	"os"

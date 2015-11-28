@@ -1,7 +1,7 @@
 package fswatch
 
 import (
-	"gorond/util"
+	"github.com/uwork/gorond/util"
 	"os"
 	"path/filepath"
 	"time"

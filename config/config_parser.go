@@ -2,8 +2,8 @@ package config
 
 import (
 	"errors"
+	"github.com/uwork/gorond/util"
 	"gopkg.in/gcfg.v1"
-	"gorond/util"
 )
 
 // NotifyType

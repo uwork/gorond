@@ -2,9 +2,9 @@ package main
 
 import (
 	"bytes"
-	"gorond/goron"
-	"gorond/logging"
-	"gorond/webapi"
+	"github.com/uwork/gorond/goron"
+	"github.com/uwork/gorond/logging"
+	"github.com/uwork/gorond/webapi"
 	"io/ioutil"
 	"os"
 	"strings"

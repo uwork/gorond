@@ -2,8 +2,8 @@ package goron
 
 import (
 	"fmt"
-	"gorond/config"
-	"gorond/notify"
+	"github.com/uwork/gorond/config"
+	"github.com/uwork/gorond/notify"
 	"strings"
 )
 

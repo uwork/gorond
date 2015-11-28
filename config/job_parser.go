@@ -3,7 +3,7 @@ package config
 import (
 	"errors"
 	"fmt"
-	"gorond/util"
+	"github.com/uwork/gorond/util"
 	"regexp"
 	"strings"
 )

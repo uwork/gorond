@@ -3,9 +3,9 @@ package webapi
 import (
 	"encoding/json"
 	"fmt"
-	"gorond/config"
-	"gorond/goron"
-	"gorond/logging"
+	"github.com/uwork/gorond/config"
+	"github.com/uwork/gorond/goron"
+	"github.com/uwork/gorond/logging"
 	"io"
 	"net"
 	"net/http"

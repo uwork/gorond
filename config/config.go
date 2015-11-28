@@ -2,7 +2,7 @@ package config
 
 import (
 	"errors"
-	"gorond/util"
+	"github.com/uwork/gorond/util"
 	"io/ioutil"
 	"log"
 	"os"

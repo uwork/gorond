@@ -1,7 +1,7 @@
 package goron
 
 import (
-	"gorond/config"
+	"github.com/uwork/gorond/config"
 )
 
 func ExampleNotifyStdout() {

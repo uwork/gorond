@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"gorond/config"
-	"gorond/goron"
-	"gorond/webapi"
+	"github.com/uwork/gorond/config"
+	"github.com/uwork/gorond/goron"
+	"github.com/uwork/gorond/webapi"
 	"log"
 	"os"
 	"os/signal"

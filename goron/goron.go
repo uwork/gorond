@@ -2,9 +2,9 @@ package goron
 
 import (
 	"github.com/robfig/cron"
-	"gorond/config"
-	"gorond/fswatch"
-	"gorond/logging"
+	"github.com/uwork/gorond/config"
+	"github.com/uwork/gorond/fswatch"
+	"github.com/uwork/gorond/logging"
 	"io"
 	"os"
 	"os/exec"
