@@ -2,6 +2,7 @@ package goron
 
 import (
 	"bufio"
+	"errors"
 	"github.com/robfig/cron"
 	"github.com/uwork/gorond/config"
 	"github.com/uwork/gorond/fswatch"
@@ -239,10 +240,16 @@ func ExampleExecutionJobFailed() {
 
 // コマンド実行のテスト
 func TestExecutionCommand(t *testing.T) {
+	tmp := SystemCommand
 
 	job := config.Job{
 		User:    "root",
 		Command: "echo cmdtest",
+	}
+
+	// テスト用のstubに差し替える
+	SystemCommand = func(command string, args ...string) ([]byte, int, error) {
+		return []byte("cmdtest"), 0, nil
 	}
 
 	out, status, err := executionCommand(&job)
@@ -257,14 +264,22 @@ func TestExecutionCommand(t *testing.T) {
 		t.Errorf("output: %s", out)
 	}
 
+	SystemCommand = tmp
 }
 
 // コマンドエラー時のテスト
 func TestExecutionCommandFail(t *testing.T) {
+	tmp := SystemCommand
 
 	job := config.Job{
 		User:    "root",
 		Command: "grep x execcmdfail",
+	}
+
+	// テスト用のstubに差し替える
+	SystemCommand = func(command string, args ...string) ([]byte, int, error) {
+		err := errors.New("grep: execcmdfail: No such file or directory")
+		return []byte(err.Error()), 2, err
 	}
 
 	out, status, err := executionCommand(&job)
@@ -279,6 +294,7 @@ func TestExecutionCommandFail(t *testing.T) {
 		t.Errorf("output: %s", out)
 	}
 
+	SystemCommand = tmp
 }
 
 // 設定自動リロードのテスト

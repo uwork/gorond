@@ -5,6 +5,7 @@ import (
 	"github.com/uwork/gorond/config"
 	"github.com/uwork/gorond/goron"
 	"github.com/uwork/gorond/logging"
+	"github.com/uwork/gorond/util"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -139,6 +140,14 @@ func TestResponseJobs(t *testing.T) {
 
 // Statuses APIのテスト
 func TestResponseStatuses(t *testing.T) {
+	// sleepを実行するstubに差し替える
+	goron.SystemCommand = func(cmd string, args ...string) ([]byte, int, error) {
+		if util.ContainsStr("sleep 3", args) {
+			time.Sleep(time.Second * 3)
+		}
+		return []byte(""), 0, nil
+	}
+
 	server, wc, wsc := createTestServer(t)
 	err := server.Start(wc, wsc)
 	if err != nil {
@@ -161,12 +170,6 @@ func TestResponseStatuses(t *testing.T) {
 		t.Errorf("\n\t(expected)%s\n\t(actual)  %s", expected, string(body))
 	}
 	resp.Body.Close()
-
-	// sleepするstubに差し替える
-	goron.SystemCommand = func(cmd string, arg ...string) ([]byte, int, error) {
-		time.Sleep(time.Second / 2)
-		return []byte(""), 0, nil
-	}
 
 	// cronをスタート
 	server.context.Start()

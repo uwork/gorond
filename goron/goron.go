@@ -14,6 +14,20 @@ import (
 
 var logger *logging.Logger
 var cronlogger *logging.Logger
+var SystemCommand = func(command string, args ...string) ([]byte, int, error) {
+	output, err := exec.Command(command, args...).CombinedOutput()
+	if e2, ok := err.(*exec.ExitError); ok {
+		if s, ok := e2.Sys().(syscall.WaitStatus); ok {
+			return output, s.ExitStatus(), err
+		}
+	}
+
+	if err != nil {
+		return output, -1, err
+	}
+
+	return output, 0, nil
+}
 
 type Goron struct {
 	cron   *cron.Cron
@@ -168,7 +182,7 @@ func executionCommand(job *config.Job) (string, int, error) {
 
 	job.Status = config.RUNNING
 	logger.Debugf("command: %s %s", command, args)
-	out, err := exec.Command(command, args...).CombinedOutput()
+	out, status, err := SystemCommand(command, args...)
 
 	output := strings.TrimRight(string(out), "\n")
 	if err == nil {
@@ -177,12 +191,7 @@ func executionCommand(job *config.Job) (string, int, error) {
 		return output, 0, nil
 	} else {
 		job.Status = config.FAILED
-		if e2, ok := err.(*exec.ExitError); ok {
-			if s, ok := e2.Sys().(syscall.WaitStatus); ok {
-				return output, s.ExitStatus(), err
-			}
-		}
-		return output, -1, err
+		return output, status, err
 	}
 }
 
