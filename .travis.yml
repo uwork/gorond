@@ -1,4 +1,4 @@
-langage: go
+language: go
 sudo: required
 go:
   - 1.5
