@@ -137,39 +137,39 @@ func TestLoadConfig(t *testing.T) {
 		t.Errorf("attribute mismatch (expected) '%s' != '%s'", expected.SNS, config.SNS)
 	}
 	if 1 != len(config.Childs) {
-		t.Errorf("attribute mismatch (expected) '%s'", config.Childs)
+		t.Errorf("attribute mismatch (expected) '%v'", config.Childs)
 	}
 
 	// job.confのテスト
 	if jobExpected.Config != config.Childs[0].Config {
-		t.Errorf("attribute mismatch (expected) '%s' != '%s'", jobExpected.Config, config.Childs[0].Config)
+		t.Errorf("attribute mismatch (expected) '%v' != '%v'", jobExpected.Config, config.Childs[0].Config)
 	}
 	if jobExpected.Mail != config.Childs[0].Mail {
-		t.Errorf("attribute mismatch (expected) '%s' != '%s'", jobExpected.Mail, config.Childs[0].Mail)
+		t.Errorf("attribute mismatch (expected) '%v' != '%v'", jobExpected.Mail, config.Childs[0].Mail)
 	}
 
 	// Job1層のテスト
 	if !jobEqual(jobExpected.Jobs[0], config.Childs[0].Jobs[0]) {
-		t.Errorf("jobs mismatch (expected) '%s' != '%s'", jobExpected.Jobs[0], config.Childs[0].Jobs[0])
+		t.Errorf("jobs mismatch (expected) '%v' != '%v'", jobExpected.Jobs[0], config.Childs[0].Jobs[0])
 	}
 	if !jobEqual(jobExpected.Jobs[1], config.Childs[0].Jobs[1]) {
-		t.Errorf("jobs mismatch (expected) '%s' != '%s'", jobExpected.Jobs[1], config.Childs[0].Jobs[1])
+		t.Errorf("jobs mismatch (expected) '%v' != '%v'", jobExpected.Jobs[1], config.Childs[0].Jobs[1])
 	}
 	// Job2層のテスト
 	jobExpected2 := jobExpected.Jobs[1].Childs
 	configJobs2 := config.Childs[0].Jobs[1].Childs
 	if !jobEqual(jobExpected2[0], configJobs2[0]) {
-		t.Errorf("jobs mismatch (expected) '%s' != '%s'", jobExpected2[0], configJobs2[0])
+		t.Errorf("jobs mismatch (expected) '%v' != '%v'", jobExpected2[0], configJobs2[0])
 	}
 	if !jobEqual(jobExpected2[1], configJobs2[1]) {
-		t.Errorf("jobs mismatch (expected) '%s' != '%s'", jobExpected2[1], configJobs2[1])
+		t.Errorf("jobs mismatch (expected) '%v' != '%v'", jobExpected2[1], configJobs2[1])
 	}
 
 	// Job3層のテスト
 	jobExpected3 := jobExpected2[1].Childs
 	configJobs3 := configJobs2[1].Childs
 	if !jobEqual(jobExpected3[0], configJobs3[0]) {
-		t.Errorf("jobs mismatch (expected) '%s' != '%s'", jobExpected3[0], configJobs3[0])
+		t.Errorf("jobs mismatch (expected) '%v' != '%v'", jobExpected3[0], configJobs3[0])
 	}
 }
 

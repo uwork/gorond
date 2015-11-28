@@ -68,7 +68,8 @@ func (self *Logger) Debug(v ...interface{}) {
 
 // DEBUGレベルのログを出力する
 func (self *Logger) Debugf(format string, args ...interface{}) {
-	self.logf(DEBUG, format, args...)
+	logfprint := self.logf // work around
+	logfprint(DEBUG, format, args...)
 }
 
 // INFOレベルのログを出力する
@@ -78,7 +79,8 @@ func (self *Logger) Info(v ...interface{}) {
 
 // INFOレベルのログを出力する
 func (self *Logger) Infof(format string, args ...interface{}) {
-	self.logf(INFO, format, args...)
+	logfprint := self.logf // work around
+	logfprint(INFO, format, args...)
 }
 
 // ERRORレベルのログを出力する
@@ -88,7 +90,8 @@ func (self *Logger) Error(v ...interface{}) {
 
 // ERRORレベルのログを出力する
 func (self *Logger) Errorf(format string, args ...interface{}) {
-	self.logf(ERROR, format, args...)
+	logfprint := self.logf // work around
+	logfprint(ERROR, format, args...)
 }
 
 // FATALレベルのログを出力する
@@ -98,7 +101,8 @@ func (self *Logger) Fatal(v ...interface{}) {
 
 // FATALレベルのログを出力する
 func (self *Logger) Fatalf(format string, args ...interface{}) {
-	self.logf(FATAL, format, args...)
+	logfprint := self.logf // work around
+	logfprint(FATAL, format, args...)
 }
 
 // ログファイルをオープンする

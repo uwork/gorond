@@ -34,7 +34,7 @@ func TestNewGoron(t *testing.T) {
 	} else if goron == nil {
 		t.Error("goron is nil")
 	} else if goron.Config != conf {
-		t.Error("goron.config:%v != %v", goron.Config, conf)
+		t.Errorf("goron.config:%v != %v", goron.Config, conf)
 	}
 }
 
@@ -65,9 +65,11 @@ func ExampleStop() {
 	}
 	goron, _ := NewGorond(conf)
 	goron.Start()
+
 	// ジョブ実行を待つ
 	time.Sleep(time.Second)
 	goron.Stop()
+
 	// さらに3秒間ってジョブ停止を確認する
 	time.Sleep(time.Second)
 
@@ -174,7 +176,7 @@ func TestRegisterJobFail(t *testing.T) {
 	if err == nil {
 		t.Error("register job successful.")
 	} else if 0 < len(cron.Entries()) {
-		t.Error("register job successful: %d", len(cron.Entries()))
+		t.Errorf("register job successful: %d", len(cron.Entries()))
 	}
 }
 

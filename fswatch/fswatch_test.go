@@ -20,14 +20,14 @@ func TestWatchNoEvent(t *testing.T) {
 		}
 
 		// 通知がきたら失敗
-		t.Errorf("(expected: -) added: %d, modified: %d, removed: %d", event.Added, event.Modified, event.Removed)
+		t.Errorf("(expected: -) added: %v, modified: %v, removed: %v", event.Added, event.Modified, event.Removed)
 	case event := <-watcher.TimeoutChan:
 		if event.Error != nil {
 			t.Fatal(event.Error)
 		}
 
 		if event.HasModifiedFiles() {
-			t.Errorf("(expected: 0) added: %d, modified: %d, removed: %d", event.Added, event.Modified, event.Removed)
+			t.Errorf("(expected: 0) added: %v, modified: %v, removed: %v", event.Added, event.Modified, event.Removed)
 		}
 	}
 }

@@ -65,7 +65,7 @@ func TestParseJobLine(t *testing.T) {
 			t.Errorf("Indent  : %s => (expected) '%d' != '%d'", s.test, actual.Indent, s.expected.Indent)
 		}
 		if actual.Status != s.expected.Status {
-			t.Errorf("Status  : %s => (expected) '%d' != '%d'", s.test, actual.Status, s.expected.Status)
+			t.Errorf("Status  : %s => (expected) '%s' != '%s'", s.test, actual.Status, s.expected.Status)
 		}
 	}
 

@@ -41,10 +41,10 @@ func notifyStdout(conf *config.Config, subject string, body string, status int) 
 // メールで通知する
 func notifyEmail(conf *config.Config, subject string, body string, status int) {
 	mail := &notify.Mail{
-		conf.Mail.From,
-		conf.Mail.Dest,
-		subject,
-		body,
+		From:    conf.Mail.From,
+		To:      conf.Mail.Dest,
+		Subject: subject,
+		Body:    body,
 	}
 
 	smtp := notify.NewSmtp(

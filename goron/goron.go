@@ -131,7 +131,7 @@ func executionJobs(conf *config.Config, jobs []*config.Job) {
 			if err != nil {
 				Notify(conf, out, status, err, cjob)
 			} else if conf.Config.NotifyWhen == "always" {
-				Notify(conf, out, status, nil, job)
+				Notify(conf, out, status, nil, cjob)
 			}
 			ch <- (err == nil)
 		}(job)
