@@ -2,7 +2,6 @@ language: go
 sudo: required
 go:
   - 1.5
-  - tip
 install:
   - export GOPATH=${HOME}/gopath
   - go get github.com/aws/aws-sdk-go/service/sns
