@@ -20,6 +20,10 @@ func TestMain(t *testing.T) {
 	if ok {
 		trans.DisableKeepAlives = true
 	}
+	// stubに差し替える
+	goron.SystemCommand = func(cmd string, arg ...string) ([]byte, int, error) {
+		return []byte(""), 0, nil
+	}
 }
 
 func TestNewWebApiServer(t *testing.T) {
@@ -157,6 +161,12 @@ func TestResponseStatuses(t *testing.T) {
 		t.Errorf("\n\t(expected)%s\n\t(actual)  %s", expected, string(body))
 	}
 	resp.Body.Close()
+
+	// sleepするstubに差し替える
+	goron.SystemCommand = func(cmd string, arg ...string) ([]byte, int, error) {
+		time.Sleep(time.Second / 2)
+		return []byte(""), 0, nil
+	}
 
 	// cronをスタート
 	server.context.Start()
