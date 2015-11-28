@@ -1,5 +1,5 @@
 langage: go
-sudo: false
+sudo: required
 go:
   - 1.5
   - tip
