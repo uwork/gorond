@@ -11,6 +11,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"testing"
 	"time"
@@ -41,6 +42,13 @@ func TestNewGoron(t *testing.T) {
 
 // Cron開始のテスト
 func ExampleStart() {
+	tmp := SystemCommand
+
+	// テスト用のstubに差し替える
+	SystemCommand = func(command string, args ...string) ([]byte, int, error) {
+		return []byte("start"), 0, nil
+	}
+
 	conf := createTestConfig()
 	conf.Jobs = []*config.Job{
 		&config.Job{Schedule: "* * * * * *", User: "root", Command: "echo start"},
@@ -52,6 +60,7 @@ func ExampleStart() {
 	goron.Stop()
 	time.Sleep(time.Second)
 
+	SystemCommand = tmp
 	// Output:
 	// notify successful: command: echo start
 	// output: start
@@ -60,6 +69,13 @@ func ExampleStart() {
 
 // Cron停止のテスト
 func ExampleStop() {
+	tmp := SystemCommand
+
+	// テスト用のstubに差し替える
+	SystemCommand = func(command string, args ...string) ([]byte, int, error) {
+		return []byte("stop"), 0, nil
+	}
+
 	conf := createTestConfig()
 	conf.Jobs = []*config.Job{
 		&config.Job{Schedule: "* * * * * *", User: "root", Command: "echo stop"},
@@ -73,6 +89,8 @@ func ExampleStop() {
 
 	// さらに3秒間ってジョブ停止を確認する
 	time.Sleep(time.Second)
+
+	SystemCommand = tmp
 
 	// Output:
 	// notify successful: command: echo stop
@@ -183,6 +201,13 @@ func TestRegisterJobFail(t *testing.T) {
 
 // ジョブ実行のテスト
 func ExampleExecutionJob() {
+	tmp := SystemCommand
+
+	// テスト用のstubに差し替える
+	SystemCommand = func(command string, args ...string) ([]byte, int, error) {
+		return []byte("test"), 0, nil
+	}
+
 	conf := createTestConfig()
 	job := config.Job{
 		User:    "root",
@@ -190,6 +215,8 @@ func ExampleExecutionJob() {
 	}
 
 	executionJobs(conf, []*config.Job{&job})
+
+	SystemCommand = tmp
 
 	// Output:
 	// notify successful: command: echo test
@@ -199,6 +226,14 @@ func ExampleExecutionJob() {
 
 // 子ジョブ実行のテスト
 func ExampleExecutionJobChilds() {
+	tmp := SystemCommand
+
+	// テスト用のstubに差し替える
+	SystemCommand = func(command string, args ...string) ([]byte, int, error) {
+		cmds := strings.Split(args[3], " ")
+		return []byte(cmds[1]), 0, nil
+	}
+
 	conf := createTestConfig()
 	job := config.Job{
 		User:    "root",
@@ -213,6 +248,8 @@ func ExampleExecutionJobChilds() {
 
 	executionJobs(conf, []*config.Job{&job})
 
+	SystemCommand = tmp
+
 	// Output:
 	// notify successful: command: echo execjob1
 	// output: execjob1
@@ -224,6 +261,14 @@ func ExampleExecutionJobChilds() {
 
 // ジョブ実行失敗のテスト
 func ExampleExecutionJobFailed() {
+	tmp := SystemCommand
+
+	// テスト用のstubに差し替える
+	SystemCommand = func(command string, args ...string) ([]byte, int, error) {
+		err := errors.New("exit status 2")
+		return []byte("grep: execfailtest: No such file or directory"), 2, err
+	}
+
 	conf := createTestConfig()
 	job := config.Job{
 		User:    "root",
@@ -231,6 +276,8 @@ func ExampleExecutionJobFailed() {
 	}
 
 	executionJobs(conf, []*config.Job{&job})
+
+	SystemCommand = tmp
 
 	// Output:
 	// notify failed: command: grep x execfailtest
