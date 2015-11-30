@@ -53,20 +53,22 @@ func doMain(configPath string, includeDir string) int {
 	grn.Start()
 
 	// API サーバの開始
-	webapi.SetLogger(config.Config.ApiLog)
-	server, err := webapi.NewWebApiServer(grn.Config.Config.WebApi, grn)
-	if err != nil {
-		log.Fatal(err)
-		return -2
-	}
+	if grn.Config.Config.WebApi != "" {
+		webapi.SetLogger(config.Config.ApiLog)
+		server, err := webapi.NewWebApiServer(grn.Config.Config.WebApi, grn)
+		if err != nil {
+			log.Fatal(err)
+			return -2
+		}
 
-	wc := make(chan os.Signal)
-	wsc := make(chan error)
-	signal.Notify(wc, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
-	err = server.Start(wc, wsc)
-	if err != nil {
-		log.Fatal(err)
-		return -2
+		wc := make(chan os.Signal)
+		wsc := make(chan error)
+		signal.Notify(wc, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+		err = server.Start(wc, wsc)
+		if err != nil {
+			log.Fatal(err)
+			return -2
+		}
 	}
 
 	log.Println("wait for signal")
