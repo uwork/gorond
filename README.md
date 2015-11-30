@@ -32,8 +32,8 @@ cronLog = /var/log/gorond/cron.log
 # apiサーバのアクセスログを記録するログファイルのパスを設定します。
 apiLog = /var/log/gorond/api.log
 
-# 通知は Eメール、fluentd、sns の3種類から選べます
-notifyType = { mail | fluentd | sns | slack }
+# 通知は mail、fluentd、sns、slack、stdout の5種類から選べます
+notifyType = { mail | fluentd | sns | slack | stdout }
 
 # 通知のタイミングを onerror(ステータスコード!=0) と always(常に) の2種類から選べます。
 notifyWhen = { onerror | always }
