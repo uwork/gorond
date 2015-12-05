@@ -198,7 +198,7 @@ func executionCommand(job *config.Job) (string, int, error) {
 // コンフィグ自動リロードの設定
 func StartAutoReload(grn *Goron, configPath string, includeDir string) (*fswatch.Watcher, error) {
 	paths := []string{configPath}
-	dirs := map[string]string{includeDir: `.+\.conf`}
+	dirs := map[string]string{includeDir: `.+\.conf$`}
 	watcher, err := fswatch.StartWatcher(paths, dirs, func(event fswatch.Event) {
 		logger.Infof("## config changed: %v", event)
 

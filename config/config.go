@@ -63,7 +63,7 @@ func LoadConfig(configPath string, includeDir string) (*Config, error) {
 		return nil, err
 	}
 
-	confFiles, err := util.FileList(includeDir, `.+\.conf`)
+	confFiles, err := util.FileList(includeDir, `.+\.conf$`)
 	if err != nil {
 		return nil, err
 	}
