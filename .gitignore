@@ -1,4 +1,7 @@
 *.swp
 *.log
 *.a
-gorond
+rpmbuild/src/gorond.conf
+/gorond
+/build
+/snapshot

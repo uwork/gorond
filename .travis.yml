@@ -1,14 +1,24 @@
 language: go
 sudo: required
 go:
-  - 1.5
+- 1.5
 install:
-  - export GOPATH=${HOME}/gopath
-  - go get github.com/aws/aws-sdk-go/service/sns
-  - go get github.com/robfig/cron
-  - go get gopkg.in/gcfg.v1
-  - go get -d -t -v ./...
-  - go build -v ./...
+- export GOPATH=${HOME}/gopath
 script:
-  - go vet ./...
-  - go test -v ./...
+- go vet ./...
+- go test -v ./...
+- make build
+before_deploy:
+- make rpm
+deploy:
+  provider: releases
+  api_key:
+    secure: jCR9dhq4v5dYhnalgt/djCJHrzatMox8sCGyfBZwBidi+vjmnE+WyCgUsggfVA9BPh3UHdrk6yrMihMLOaRfheweOv0jDp55PRHn9/7mZ1T6F07fySPMy+UFOddeGUynSMqZdojHkvGwKGddZ+Hw8pq7nLslvkmZlGejYJBhAlQ+YFl8ud9IwbLvO92YQmCigi0JStsj4B64wNzExNuXUqxcpTC4UGaF1hjHfcdyXvRr9tNX79Jj/8lyBeBMmv5CG5SP0Enn3LN24adFshR8uCplozuTNfcj2xIamSr0jJuvnVVSF+UTYYyYLbZywPu9oPXhWc+tJ6V1zO02RPpMFBHgtQO8xJti3x8pREzoP23fYeRbfdRai2EPF/XCB9lnVDHr2ERzFS2gogOQmNJBudYyNMKMTvOuN7ZaxO4VRj9MSofU9BImtCowgJLWgEUcrQ2WoS6tIDNWn7zElsQeGOZts3RGiab9D6/AfH3jZvR6kgULZ82BK8ieyTu1ZmaKX8ptvifZfJtnUS6QV8t2ZKRpek8TKch9wwOAKMq0N2eUdoBmzpPiohZaVlThR5HoTCJZVIGWb/rd/OU6OTas4rRSVnfJUKLGzM1zl+7rINq0gkuYA4UQR/pQkjwdMw3bVUNT32883SD4wH4ttx0K5rczWdQscbWqDgON/ewx82s=
+  file:
+  - /home/travis/rpmbuild/RPMS/noarch/gorond-1.0.0-1.el7.centos.noarch.rpm
+  skip_cleanup: true
+  on:
+    repo: uwork/gorond
+    all_branches: true
+    tags: true
+

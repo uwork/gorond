@@ -1,0 +1,2 @@
+gorond_config="/etc/goron.conf"
+gorond_dir="/etc/goron.d"

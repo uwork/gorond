@@ -1,0 +1,90 @@
+#!/bin/sh
+#
+#   Goron is extended cron by go.
+#
+# chkconfig:   2345 95 5 
+# description: gorond
+ 
+# processname: gorond
+# config:      /etc/goron.conf
+# config:      /etc/goron.d/*.conf
+# config:      /etc/sysconfig/gorond.conf
+# pidfile:     /var/run/gorond.pid
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+gorond="/usr/local/bin/gorond"
+prog=$(basename $gorond)
+
+sysconfig="/etc/sysconfig/gorond"
+lockfile="/var/lock/subsys/gorond"
+pidfile="/var/run/${prog}.pid"
+
+gorond_config="/etc/goron.conf"
+gorond_dir="/etc/goron.d"
+
+[ -f $sysconfig ] && . $sysconfig
+
+cmd="$gorond -c $gorond_config -d $gorond_dir -p $pidfile"
+
+function start() {
+  echo -n $"Starting $prog: "
+  $cmd 2>&1 &
+  sleep 1
+  if [ ! -f $pidfile ]; then
+    failure
+    RETVAL=1
+  else
+    RETVAL=0
+    touch $lockfile
+    success
+  fi
+  echo
+}
+
+function stop() {
+  if [ ! -f $pidfile ]; then
+    echo
+    echo "pidfile ($pidfile) not found" >&2
+
+    return 0
+  fi
+
+  echo -n $"Stopping $prog: "
+  killproc -p $pidfile $prog
+  RETVAL=$?
+  echo
+  [ $RETVAL -eq 0 ] && rm -f $lockfile
+}
+
+function p_status() {
+  status $prog
+}
+
+case "$1" in
+  start)
+    p_status && exit 0
+    $1
+    ;;
+  stop)
+    p_status || exit 0
+    $1
+    ;;
+  restart)
+    stop
+    start
+    RETVAL=$?
+    ;;
+  status)
+    p_status
+    RETVAL=$?
+    ;;
+  *)
+    echo $"Usage: $0 {start|stop|restart|status}"
+    RETVAL=2
+    ;;
+esac
+
+exit $RETVAL
+
