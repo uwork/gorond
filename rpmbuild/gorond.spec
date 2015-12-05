@@ -3,7 +3,7 @@
 
 Name:	  gorond
 Version:	1.0.0
-Release:	1%{?dist}
+Release:	1
 Summary:	custom cron powered by go.
 
 Group:		uwork
