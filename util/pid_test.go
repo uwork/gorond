@@ -45,7 +45,7 @@ func TestExistsPidFile(t *testing.T) {
 		t.Error(err)
 	}
 	if exists {
-		t.Errorf("already exists current pid file.", pidfile)
+		t.Errorf("already exists current pid file(%s).", pidfile)
 	}
 
 	// 現在のPIDファイルを作成する
