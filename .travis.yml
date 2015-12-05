@@ -5,6 +5,7 @@ go:
 install:
 - export GOPATH=${HOME}/gopath
 script:
+- make deps
 - go vet ./...
 - go test -v ./...
 - make build
