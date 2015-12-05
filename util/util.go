@@ -8,6 +8,12 @@ import (
 	"strings"
 )
 
+// ファイルが存在するか確認
+func ExistsFile(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil
+}
+
 // 文字列をスペースとタブでtrimする
 func Trim(str string) string {
 	return strings.Trim(str, " 　\t")

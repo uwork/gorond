@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"github.com/uwork/gorond/goron"
 	"github.com/uwork/gorond/logging"
+	"github.com/uwork/gorond/util"
 	"github.com/uwork/gorond/webapi"
 	"io/ioutil"
 	"os"
@@ -17,6 +18,7 @@ func TestDoMain(t *testing.T) {
 
 	configPath := "test_config.conf"
 	configDir := "test_config.d"
+	pidfile := "test.pid"
 
 	configContent := `
 [config]
@@ -28,6 +30,7 @@ notifywhen = onerror
 subject = notify result
 
 `
+
 	err := ioutil.WriteFile(configPath, []byte(configContent), 0666)
 	if err != nil {
 		t.Error(err)
@@ -41,7 +44,7 @@ subject = notify result
 	defer os.Remove(configDir)
 
 	// 別スレッドで実行
-	go doMain(configPath, configDir)
+	go doMain(configPath, configDir, pidfile)
 
 	// 起動完了を待つ
 	time.Sleep(time.Second)
@@ -52,6 +55,11 @@ subject = notify result
 	apilogger := &bytes.Buffer{}
 	goron.SetLoggerWithWriter(logger, cronlogger, logging.DEBUG)
 	webapi.SetLoggerWithWriter(apilogger, logging.DEBUG)
+
+	// pidファイルの存在確認
+	if !util.ExistsFile(pidfile) {
+		t.Errorf("pid file(%s) not found.", pidfile)
+	}
 
 	// 自分自身にSIGTERMを投げる
 	pid := os.Getpid()
@@ -70,5 +78,10 @@ subject = notify result
 	apiout := apilogger.String()
 	if !strings.Contains(apiout, "terminated") {
 		t.Errorf("(expected) %v != %v", "terminated", apiout)
+	}
+
+	// pidファイルの削除確認
+	if util.ExistsFile(pidfile) {
+		t.Errorf("pid file(%s) not deleted.", pidfile)
 	}
 }

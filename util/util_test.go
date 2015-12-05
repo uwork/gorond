@@ -1,9 +1,29 @@
 package util
 
 import (
+	"io/ioutil"
+	"os"
 	"reflect"
 	"testing"
 )
+
+func TestExistsFile(t *testing.T) {
+	testfile := "_testfile"
+
+	if ExistsFile(testfile) {
+		t.Errorf("file %s is exists.", testfile)
+	}
+
+	err := ioutil.WriteFile(testfile, []byte("test"), 0644)
+	if err != nil {
+		t.Error(err)
+	}
+	defer os.Remove(testfile)
+
+	if !ExistsFile(testfile) {
+		t.Errorf("file %s is not exists.", testfile)
+	}
+}
 
 func TestTrim(t *testing.T) {
 	expecteds := []struct {
@@ -51,7 +71,7 @@ func TestFileList(t *testing.T) {
 		filter   string
 		expected []string
 	}{
-		{".", `.+\.go$`, []string{"util.go", "util_test.go"}},
+		{".", `.+\.go$`, []string{"pid.go", "pid_test.go", "util.go", "util_test.go"}},
 		{".", `.+\.conf$`, []string{}},
 	}
 

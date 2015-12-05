@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/uwork/gorond/config"
 	"github.com/uwork/gorond/goron"
+	"github.com/uwork/gorond/util"
 	"github.com/uwork/gorond/webapi"
 	"log"
 	"os"
@@ -17,6 +18,7 @@ var version = "1.0"
 func main() {
 	configPath := flag.String("c", "/etc/goron.conf", "root config file")
 	includeDir := flag.String("d", "/etc/goron.d/", "config directory")
+	pidPath := flag.String("p", "/var/pid/gorond", "pid file")
 	version := flag.Bool("v", false, "show version")
 	flag.Parse()
 
@@ -24,12 +26,12 @@ func main() {
 	if *version {
 		result = doVersion()
 	} else {
-		result = doMain(*configPath, *includeDir)
+		result = doMain(*configPath, *includeDir, *pidPath)
 	}
 	os.Exit(result)
 }
 
-func doMain(configPath string, includeDir string) int {
+func doMain(configPath string, includeDir string, pidPath string) int {
 
 	// load config.
 	config, err := config.LoadConfig(configPath, includeDir)
@@ -71,8 +73,17 @@ func doMain(configPath string, includeDir string) int {
 		}
 	}
 
+	// create pid file.
+	err = util.SavePidFile(pidPath)
+	if err != nil {
+		log.Fatal(err)
+		return -3
+	}
+	defer os.Remove(pidPath)
+
 	log.Println("wait for signal")
 
+	// wait for terminate.
 	c := make(chan os.Signal)
 	sc := make(chan int, 1)
 	signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
