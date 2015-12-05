@@ -3,6 +3,7 @@ go:
 - 1.5
 install:
 - export GOPATH=${HOME}/gopath
+- sudo apt-get install -y rpm
 script:
 - make deps
 - go vet ./...
