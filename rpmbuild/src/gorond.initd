@@ -58,6 +58,13 @@ function stop() {
   [ $RETVAL -eq 0 ] && rm -f $lockfile
 }
 
+
+function configtest() {
+  $cmd -t
+  RETVAL=$?
+  return $RETVAL
+}
+
 function p_status() {
   status $prog
 }
@@ -65,13 +72,18 @@ function p_status() {
 case "$1" in
   start)
     p_status && exit 0
+    configtest || exit 0
     $1
     ;;
   stop)
     p_status || exit 0
     $1
     ;;
+  configtest)
+    $1
+    ;;
   restart)
+    configtest || exit 0
     stop
     start
     RETVAL=$?
@@ -81,7 +93,7 @@ case "$1" in
     RETVAL=$?
     ;;
   *)
-    echo $"Usage: $0 {start|stop|restart|status}"
+    echo $"Usage: $0 {start|stop|configtest|restart|status}"
     RETVAL=2
     ;;
 esac

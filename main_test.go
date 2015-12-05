@@ -85,3 +85,103 @@ subject = notify result
 		t.Errorf("pid file(%s) not deleted.", pidfile)
 	}
 }
+
+func TestDoConfigTestSucessful(t *testing.T) {
+	configPath := "test_config.conf"
+	configDir := "test_config.d"
+
+	configContent := `
+[config]
+log = ""
+cronlog = ""
+webapi = 0.0.0.0:6777
+notifytype = stdout
+notifywhen = onerror
+subject = notify result
+
+`
+	err := ioutil.WriteFile(configPath, []byte(configContent), 0666)
+	if err != nil {
+		t.Error(err)
+	}
+	defer os.Remove(configPath)
+
+	err = os.Mkdir(configDir, 0777)
+	if err != nil {
+		t.Error(err)
+	}
+	defer os.Remove(configDir)
+
+	result := doConfigTest(configPath, configDir)
+	if result != 0 {
+		t.Error("configtest failure.")
+	}
+
+}
+
+func TestDoConfigTestFail1(t *testing.T) {
+	configPath := "test_config.conf"
+	configDir := "test_config.d"
+
+	configContent := `
+log = ""
+cronlog = ""
+webapi = 0.0.0.0:6777
+notifytype = stdout
+notifywhen = onerror
+subject = notify result
+
+`
+	err := ioutil.WriteFile(configPath, []byte(configContent), 0666)
+	if err != nil {
+		t.Error(err)
+	}
+	defer os.Remove(configPath)
+
+	err = os.Mkdir(configDir, 0777)
+	if err != nil {
+		t.Error(err)
+	}
+	defer os.Remove(configDir)
+
+	result := doConfigTest(configPath, configDir)
+	if result == 0 {
+		t.Error("configtest successful.")
+	}
+
+}
+
+func TestDoConfigTestFail2(t *testing.T) {
+	configPath := "test_config.conf"
+	configDir := "test_config.d"
+
+	configContent := `
+[config]
+log = ""
+cronlog = ""
+webapi = 0.0.0.0:6777
+notifytype = stdout
+notifywhen = onerror
+subject = notify result
+
+[job]
+0 * * * * * error
+`
+	err := ioutil.WriteFile(configPath, []byte(configContent), 0666)
+	if err != nil {
+		t.Error(err)
+	}
+	defer os.Remove(configPath)
+
+	err = os.Mkdir(configDir, 0777)
+	if err != nil {
+		t.Error(err)
+	}
+	defer os.Remove(configDir)
+
+	result := doConfigTest(configPath, configDir)
+	if result == 0 {
+		t.Error("configtest successful.")
+	}
+
+}

@@ -2,7 +2,7 @@
 %define _binaries_in_noarch_packages_terminate_build 0
 
 Name:	  gorond
-Version:	1.0.0
+Version:	1.0.1
 Release:	1
 Summary:	custom cron powered by go.
 

@@ -13,22 +13,37 @@ import (
 	"syscall"
 )
 
-var version = "1.0"
+var version = "1.0.1"
 
 func main() {
 	configPath := flag.String("c", "/etc/goron.conf", "root config file")
 	includeDir := flag.String("d", "/etc/goron.d/", "config directory")
 	pidPath := flag.String("p", "/var/pid/gorond", "pid file")
+	test := flag.Bool("t", false, "test config")
 	version := flag.Bool("v", false, "show version")
 	flag.Parse()
 
 	var result int
 	if *version {
 		result = doVersion()
+	} else if *test {
+		result = doConfigTest(*configPath, *includeDir)
 	} else {
 		result = doMain(*configPath, *includeDir, *pidPath)
 	}
 	os.Exit(result)
+}
+
+func doConfigTest(configPath string, includeDir string) int {
+
+	// load config test.
+	_, err := config.LoadConfig(configPath, includeDir)
+	if err != nil {
+		log.Println(err)
+		return -1
+	}
+
+	return 0
 }
 
 func doMain(configPath string, includeDir string, pidPath string) int {
@@ -36,22 +51,18 @@ func doMain(configPath string, includeDir string, pidPath string) int {
 	// load config.
 	config, err := config.LoadConfig(configPath, includeDir)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return -1
 	}
 
 	// start goron.
 	grn, err := goron.NewGorond(config)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return -1
 	}
 
 	// Goronデーモンの開始
-	_, err = goron.StartAutoReload(grn, configPath, includeDir)
-	if err != nil {
-		return -1
-	}
 	grn.Start()
 
 	// API サーバの開始
@@ -59,7 +70,7 @@ func doMain(configPath string, includeDir string, pidPath string) int {
 		webapi.SetLogger(config.Config.ApiLog)
 		server, err := webapi.NewWebApiServer(grn.Config.Config.WebApi, grn)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 			return -2
 		}
 
@@ -68,7 +79,7 @@ func doMain(configPath string, includeDir string, pidPath string) int {
 		signal.Notify(wc, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 		err = server.Start(wc, wsc)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 			return -2
 		}
 	}
@@ -76,7 +87,7 @@ func doMain(configPath string, includeDir string, pidPath string) int {
 	// create pid file.
 	err = util.SavePidFile(pidPath)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return -3
 	}
 	defer os.Remove(pidPath)
