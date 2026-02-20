@@ -1,5 +1,9 @@
 # CLAUDE.md — AI Assistant Guide for gorond
 
+## Communication Language
+
+**日本語で会話すること。** ユーザーへの返答・説明・質問はすべて日本語で行う。コード・コメント・コミットメッセージは英語でも可。
+
 ## Project Overview
 
 **gorond** is a Go-based cron daemon that reimplements traditional Unix cron with enhanced features:
