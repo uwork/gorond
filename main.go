@@ -74,7 +74,7 @@ func doMain(configPath string, includeDir string, pidPath string) int {
 			return -2
 		}
 
-		wc := make(chan os.Signal)
+		wc := make(chan os.Signal, 1)
 		wsc := make(chan error)
 		signal.Notify(wc, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 		err = server.Start(wc, wsc)
@@ -95,7 +95,7 @@ func doMain(configPath string, includeDir string, pidPath string) int {
 	log.Println("wait for signal")
 
 	// wait for terminate.
-	c := make(chan os.Signal)
+	c := make(chan os.Signal, 1)
 	sc := make(chan int, 1)
 	signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 	go goron.WaitSignal(c, sc)

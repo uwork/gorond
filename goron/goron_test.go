@@ -3,11 +3,7 @@ package goron
 import (
 	"bufio"
 	"errors"
-	"github.com/robfig/cron"
-	"github.com/uwork/gorond/config"
-	"github.com/uwork/gorond/fswatch"
-	"github.com/uwork/gorond/logging"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 	"os/signal"
@@ -15,15 +11,20 @@ import (
 	"syscall"
 	"testing"
 	"time"
+
+	"github.com/robfig/cron"
+	"github.com/uwork/gorond/config"
+	"github.com/uwork/gorond/fswatch"
+	"github.com/uwork/gorond/logging"
 )
 
 func TestMain(t *testing.T) {
-	testWriter := bufio.NewWriter(ioutil.Discard)
+	testWriter := bufio.NewWriter(io.Discard)
 	logger = logging.NewLoggerWithWriter(testWriter, logging.INFO)
 	cronlogger = logging.NewLoggerWithWriter(testWriter, logging.INFO)
 
 	// 標準のlogも出力先をDiscardにする
-	log.SetOutput(ioutil.Discard)
+	log.SetOutput(io.Discard)
 }
 
 // インスタンス作成のテスト
@@ -41,7 +42,7 @@ func TestNewGoron(t *testing.T) {
 }
 
 // Cron開始のテスト
-func ExampleStart() {
+func Example_start() {
 	tmp := SystemCommand
 
 	// テスト用のstubに差し替える
@@ -200,7 +201,7 @@ func TestRegisterJobFail(t *testing.T) {
 }
 
 // ジョブ実行のテスト
-func ExampleExecutionJob() {
+func Example_executionJob() {
 	tmp := SystemCommand
 
 	// テスト用のstubに差し替える
@@ -225,7 +226,7 @@ func ExampleExecutionJob() {
 }
 
 // 子ジョブ実行のテスト
-func ExampleExecutionJobChilds() {
+func Example_executionJobChilds() {
 	tmp := SystemCommand
 
 	// テスト用のstubに差し替える
@@ -260,7 +261,7 @@ func ExampleExecutionJobChilds() {
 }
 
 // ジョブ実行失敗のテスト
-func ExampleExecutionJobFailed() {
+func Example_executionJobFailed() {
 	tmp := SystemCommand
 
 	// テスト用のstubに差し替える
@@ -349,7 +350,7 @@ func TestStartAutoReload(t *testing.T) {
 	configPath := ".reload.conf"
 	configDir := "reload.d"
 	os.Mkdir(configDir, 0777)
-	ioutil.WriteFile(configPath, []byte(`
+	os.WriteFile(configPath, []byte(`
 [config]
 notifytype = stdout
 notifywhen = always
@@ -384,7 +385,7 @@ cronlog = ""
 
 	// 2秒待って設定を書き換える
 	time.Sleep(time.Second * 2)
-	ioutil.WriteFile(configPath, []byte(`
+	os.WriteFile(configPath, []byte(`
 [config]
 notifytype = stdout
 notifywhen = onerror
@@ -405,7 +406,7 @@ cronlog = ""
 // シグナル待ちのテスト
 func TestWaitSignal(t *testing.T) {
 
-	c := make(chan os.Signal)
+	c := make(chan os.Signal, 1)
 	sc := make(chan int, 1)
 	signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 

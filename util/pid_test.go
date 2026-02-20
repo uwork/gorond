@@ -1,7 +1,6 @@
 package util
 
 import (
-	"io/ioutil"
 	"os"
 	"strconv"
 	"testing"
@@ -15,7 +14,7 @@ func TestSavePidFile(t *testing.T) {
 	}
 	defer os.Remove(pidfile)
 
-	data, err := ioutil.ReadFile(pidfile)
+	data, err := os.ReadFile(pidfile)
 	if err != nil {
 		t.Error(err)
 	}
@@ -35,7 +34,7 @@ func TestExistsPidFile(t *testing.T) {
 	pidfile := "_pid"
 
 	// 現在のPIDと違うPIDのファイルを用意する
-	err := ioutil.WriteFile(pidfile, []byte("1000000"), 0644)
+	err := os.WriteFile(pidfile, []byte("1000000"), 0644)
 	if err != nil {
 		t.Error(err)
 	}

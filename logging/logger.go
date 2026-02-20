@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"path"
@@ -40,7 +39,7 @@ func NewLogger(path string, level Level) *Logger {
 		return &Logger{level, logger, writer, file}
 	} else {
 		// devnullに出力する
-		logger := log.New(ioutil.Discard, "", log.LstdFlags)
+		logger := log.New(io.Discard, "", log.LstdFlags)
 		return &Logger{level, logger, nil, nil}
 	}
 }

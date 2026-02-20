@@ -2,7 +2,6 @@ package logging
 
 import (
 	"bytes"
-	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
@@ -19,7 +18,7 @@ func TestLogLevel(t *testing.T) {
 	logger.Error("error log")
 	logger.Fatal("fatal log")
 
-	logs, _ := ioutil.ReadFile(testLogFile)
+	logs, _ := os.ReadFile(testLogFile)
 	logstr := string(logs)
 
 	if strings.Contains(logstr, "debug log") {

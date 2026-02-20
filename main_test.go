@@ -2,16 +2,16 @@ package main
 
 import (
 	"bytes"
-	"github.com/uwork/gorond/goron"
-	"github.com/uwork/gorond/logging"
-	"github.com/uwork/gorond/util"
-	"github.com/uwork/gorond/webapi"
-	"io/ioutil"
 	"os"
 	"strings"
 	"syscall"
 	"testing"
 	"time"
+
+	"github.com/uwork/gorond/goron"
+	"github.com/uwork/gorond/logging"
+	"github.com/uwork/gorond/util"
+	"github.com/uwork/gorond/webapi"
 )
 
 func TestDoMain(t *testing.T) {
@@ -31,7 +31,7 @@ subject = notify result
 
 `
 
-	err := ioutil.WriteFile(configPath, []byte(configContent), 0666)
+	err := os.WriteFile(configPath, []byte(configContent), 0666)
 	if err != nil {
 		t.Error(err)
 	}
@@ -100,7 +100,7 @@ notifywhen = onerror
 subject = notify result
 
 `
-	err := ioutil.WriteFile(configPath, []byte(configContent), 0666)
+	err := os.WriteFile(configPath, []byte(configContent), 0666)
 	if err != nil {
 		t.Error(err)
 	}
@@ -132,7 +132,7 @@ notifywhen = onerror
 subject = notify result
 
 `
-	err := ioutil.WriteFile(configPath, []byte(configContent), 0666)
+	err := os.WriteFile(configPath, []byte(configContent), 0666)
 	if err != nil {
 		t.Error(err)
 	}
@@ -167,7 +167,7 @@ subject = notify result
 [job]
 0 * * * * * error
 `
-	err := ioutil.WriteFile(configPath, []byte(configContent), 0666)
+	err := os.WriteFile(configPath, []byte(configContent), 0666)
 	if err != nil {
 		t.Error(err)
 	}

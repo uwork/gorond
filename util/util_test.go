@@ -1,7 +1,6 @@
 package util
 
 import (
-	"io/ioutil"
 	"os"
 	"reflect"
 	"testing"
@@ -14,7 +13,7 @@ func TestExistsFile(t *testing.T) {
 		t.Errorf("file %s is exists.", testfile)
 	}
 
-	err := ioutil.WriteFile(testfile, []byte("test"), 0644)
+	err := os.WriteFile(testfile, []byte("test"), 0644)
 	if err != nil {
 		t.Error(err)
 	}

@@ -1,7 +1,6 @@
 package util
 
 import (
-	"io/ioutil"
 	"log"
 	"os"
 	"regexp"
@@ -38,7 +37,7 @@ func FileList(dir string, pattern string) ([]string, error) {
 		return files, err
 	}
 
-	infos, err := ioutil.ReadDir(dir)
+	infos, err := os.ReadDir(dir)
 	if err != nil {
 		return files, nil
 	}
