@@ -4,7 +4,7 @@ import (
 	"github.com/uwork/gorond/config"
 )
 
-func ExampleNotifyStdout() {
+func Example_notifyStdout() {
 	conf := createTestConfig()
 	job := &config.Job{Command: "echo output notify"}
 

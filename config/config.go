@@ -3,7 +3,6 @@ package config
 import (
 	"errors"
 	"github.com/uwork/gorond/util"
-	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -87,7 +86,7 @@ func newGoronConfig(configPath string, baseConfig *Config) (*Config, error) {
 		return nil, errors.New(configPath + " is not found")
 	}
 
-	content, err := ioutil.ReadFile(configPath)
+	content, err := os.ReadFile(configPath)
 	if err != nil {
 		return nil, err
 	}

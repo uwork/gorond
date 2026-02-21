@@ -2,7 +2,6 @@ package util
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -27,7 +26,7 @@ func SavePidFile(pidfile string) error {
 	}
 
 	pid := strconv.Itoa(syscall.Getpid())
-	err = ioutil.WriteFile(pidfile, []byte(pid), 0644)
+	err = os.WriteFile(pidfile, []byte(pid), 0644)
 	if err != nil {
 		return err
 	}
@@ -41,7 +40,7 @@ func ExistsPidFile(pidfile string) (bool, error) {
 		return false, nil
 	}
 
-	fpid, err := ioutil.ReadFile(pidfile)
+	fpid, err := os.ReadFile(pidfile)
 	if err != nil {
 		return false, err
 	}

@@ -2,11 +2,7 @@ package webapi
 
 import (
 	"bytes"
-	"github.com/uwork/gorond/config"
-	"github.com/uwork/gorond/goron"
-	"github.com/uwork/gorond/logging"
-	"github.com/uwork/gorond/util"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	"os/signal"
@@ -14,6 +10,11 @@ import (
 	"syscall"
 	"testing"
 	"time"
+
+	"github.com/uwork/gorond/config"
+	"github.com/uwork/gorond/goron"
+	"github.com/uwork/gorond/logging"
+	"github.com/uwork/gorond/util"
 )
 
 func TestMain(t *testing.T) {
@@ -55,7 +56,7 @@ func TestStart(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	wc := make(chan os.Signal)
+	wc := make(chan os.Signal, 1)
 	wsc := make(chan error)
 	signal.Notify(wc, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 	err = server.Start(wc, wsc)
@@ -95,7 +96,7 @@ func TestResponse404(t *testing.T) {
 	if resp.StatusCode != 404 {
 		t.Errorf("(expected) status: %d != %d", resp.StatusCode, 404)
 	}
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		t.Error(err)
 	}
@@ -123,7 +124,7 @@ func TestResponseJobs(t *testing.T) {
 	if resp.StatusCode != 200 {
 		t.Errorf("(expected) status: %d != %d", resp.StatusCode, 200)
 	}
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		t.Error(err)
 	}
@@ -161,7 +162,7 @@ func TestResponseStatuses(t *testing.T) {
 	if resp.StatusCode != 200 {
 		t.Errorf("(expected) status: %d != %d", resp.StatusCode, 200)
 	}
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		t.Error(err)
 	}
@@ -184,7 +185,7 @@ func TestResponseStatuses(t *testing.T) {
 	if resp2.StatusCode != 200 {
 		t.Errorf("(expected) status: %d != %d", resp2.StatusCode, 200)
 	}
-	body2, err := ioutil.ReadAll(resp2.Body)
+	body2, err := io.ReadAll(resp2.Body)
 	if err != nil {
 		t.Error(err)
 	}
@@ -218,7 +219,7 @@ func createTestServer(t *testing.T) (*WebApiServer, chan os.Signal, chan error) 
 		os.Exit(-1)
 	}
 
-	wc := make(chan os.Signal)
+	wc := make(chan os.Signal, 1)
 	wsc := make(chan error)
 	signal.Notify(wc, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 
