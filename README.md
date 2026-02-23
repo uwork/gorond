@@ -73,14 +73,16 @@ topicArn = "arn:aws:sns:ap-northeast-1:0000000000000:app/EXAMPLE/sample"
 
 [slack]
 # notifytype = slack の場合、以下の設定が有効になります。
+# Slack app の Incoming Webhook URL を使用します。
+# (旧 legacy incoming webhook は非対応です)
 
-# ポストするチャンネル。'#'なしで記述します。
+# 通知先チャンネル。Slack app 側で設定するため、この値はペイロードに含まれません。
 Channel = xxxxx
 
-# slackのwebhookurlを取得して貼り付けます。
-WebhookUrl = http://xxxxxxxxxxxxxx/xxxx
+# Slack app の Incoming Webhook URL を設定します。
+WebhookUrl = https://hooks.slack.com/services/XXXXX/XXXXX/XXXXX
 
-# botのアイコンを変更する場合、アイコンのURLを指定します。
+# botのアイコン設定。Slack app では使用されません（Slack app 側でアイコンを設定してください）。
 IconUrl = http://xxxxxxxxx/xxxxxxxx
 ```
 
