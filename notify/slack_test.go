@@ -2,8 +2,8 @@ package notify
 
 import (
 	"fmt"
+	"io"
 	"net/http"
-	"net/url"
 	"testing"
 )
 
@@ -39,26 +39,29 @@ func TestSendSlack(t *testing.T) {
 		url     string
 		iconurl string
 		status  int
-		emoji   string
 		message string
 	}{
-		{"chan", "https://localhost/", "", 0, ":simple_smile:", "smile message to slack"},
-		{"chan", "https://localhost/", "", 1, ":rage:", "rage message to slack"},
-		{"bot", "http://localhost:8080/", "http://localhost/icon.png", 0, "", "message to slack"},
+		{"chan", "https://localhost/", "", 0, "smile message to slack"},
+		{"chan", "https://localhost/", "", 1, "rage message to slack"},
+		{"bot", "http://localhost:8080/", "http://localhost/icon.png", 0, "message to slack"},
 	}
 
 	for _, s := range expecteds {
 		inst := NewSlack(s.channel, s.url, s.iconurl)
-		expectPayload := fmt.Sprintf(`{"channel":"%s","text":"%s","icon_url":"%s","icon_emoji":"%s"}`, s.channel, s.message, s.iconurl, s.emoji)
+		expectPayload := fmt.Sprintf(`{"text":"%s"}`, s.message)
 
-		inst.PostForm = func(url string, data url.Values) (*http.Response, error) {
+		inst.PostJSON = func(url string, contentType string, body io.Reader) (*http.Response, error) {
 			if url != s.url {
 				t.Errorf("(expected) '%s' != '%s'", s.url, url)
 			}
 
-			payload := data["payload"][0]
-			if payload != expectPayload {
-				t.Errorf("(expected) '%s' != '%v'", expectPayload, payload)
+			if contentType != "application/json" {
+				t.Errorf("(expected) 'application/json' != '%s'", contentType)
+			}
+
+			bodyBytes, _ := io.ReadAll(body)
+			if string(bodyBytes) != expectPayload {
+				t.Errorf("(expected) '%s' != '%s'", expectPayload, string(bodyBytes))
 			}
 
 			return nil, nil
