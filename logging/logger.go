@@ -30,7 +30,12 @@ type Logger struct {
 
 // 新規ロガーの作成
 func NewLogger(path string, level Level) *Logger {
-	if path != "" {
+	if path == "stdout" {
+		// 標準出力に出力する
+		writer := bufio.NewWriter(os.Stdout)
+		logger := log.New(writer, "", log.LstdFlags)
+		return &Logger{level, logger, writer, nil}
+	} else if path != "" {
 		// ファイルに出力する
 		file := openLogFile(path)
 		writer := bufio.NewWriter(file)

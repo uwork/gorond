@@ -19,6 +19,7 @@ func main() {
 	configPath := flag.String("c", "/etc/goron.conf", "root config file")
 	includeDir := flag.String("d", "/etc/goron.d/", "config directory")
 	pidPath := flag.String("p", "/var/pid/gorond", "pid file")
+	stdout := flag.Bool("stdout", false, "output logs to stdout instead of log files")
 	test := flag.Bool("t", false, "test config")
 	version := flag.Bool("v", false, "show version")
 	flag.Parse()
@@ -29,7 +30,7 @@ func main() {
 	} else if *test {
 		result = doConfigTest(*configPath, *includeDir)
 	} else {
-		result = doMain(*configPath, *includeDir, *pidPath)
+		result = doMain(*configPath, *includeDir, *pidPath, *stdout)
 	}
 	os.Exit(result)
 }
@@ -46,13 +47,20 @@ func doConfigTest(configPath string, includeDir string) int {
 	return 0
 }
 
-func doMain(configPath string, includeDir string, pidPath string) int {
+func doMain(configPath string, includeDir string, pidPath string, stdout bool) int {
 
 	// load config.
 	config, err := config.LoadConfig(configPath, includeDir)
 	if err != nil {
 		log.Println(err)
 		return -1
+	}
+
+	// -stdout flag overrides log paths to write to stdout
+	if stdout {
+		config.Config.Log = "stdout"
+		config.Config.CronLog = "stdout"
+		config.Config.ApiLog = "stdout"
 	}
 
 	// start goron.

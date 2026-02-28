@@ -44,7 +44,7 @@ subject = notify result
 	defer os.Remove(configDir)
 
 	// 別スレッドで実行
-	go doMain(configPath, configDir, pidfile)
+	go doMain(configPath, configDir, pidfile, false)
 
 	// 起動完了を待つ
 	time.Sleep(time.Second)

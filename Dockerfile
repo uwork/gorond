@@ -23,4 +23,4 @@ COPY --from=builder /build/gorond /usr/local/bin/gorond
 
 EXPOSE 6777
 
-CMD ["/usr/local/bin/gorond", "-c", "/etc/goron.conf", "-d", "/etc/goron.d/"]
+CMD ["/usr/local/bin/gorond", "-c", "/etc/goron.conf", "-d", "/etc/goron.d/", "--stdout"]
