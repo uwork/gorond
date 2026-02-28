@@ -1,0 +1,13 @@
+services:
+  gorond:
+    build: .
+    volumes:
+      - ./docker/goron.conf:/etc/goron.conf:ro
+      - ./docker/goron.d:/etc/goron.d:ro
+      - gorond-logs:/var/log/gorond
+    ports:
+      - "6777:6777"
+    restart: unless-stopped
+
+volumes:
+  gorond-logs:
